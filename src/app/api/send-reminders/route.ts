@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server';
 import admin from '@/lib/firebaseAdmin';
 import type { ServiceContract, ServiceEngineer } from '@/lib/types';
