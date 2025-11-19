@@ -1,5 +1,6 @@
-// firebaseAdmin.ts
-import { admin } from 'firebase-admin';
+// src/lib/firebaseAdmin.ts
+
+import admin from 'firebase-admin';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -12,4 +13,6 @@ if (!admin.apps.length) {
   });
 }
 
-export { admin }; // <- named export
+export { admin };
+
+// ✅ Trigger clean build for Vercel
