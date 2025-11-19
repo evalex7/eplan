@@ -1,6 +1,4 @@
-
-
-
+// src/lib/types.ts
 
 export interface ServiceReport {
   id: string;
@@ -15,7 +13,7 @@ export interface Equipment {
   name: string;
   model: string;
   serialNumber: string;
-  groupNumber?: string; // Додано нове поле
+  groupNumber?: string;
   reports?: ServiceReport[];
 }
 
@@ -39,22 +37,19 @@ export interface ClientObject {
 }
 
 export type ServiceType = 'Щоквартальне' | 'Піврічне' | 'Щорічне';
-
 export type TaskStatus = 'Заплановано' | 'Виконано' | 'Пролонгація';
-
 export type MaintenancePeriodStatus = 'Заплановано' | 'Виконано';
-
 export type SubdivisionType = 'КОНД' | 'ДБЖ' | 'ДГУ';
 
 export interface MaintenancePeriod {
-    id: string;
-    name: string;
-    startDate?: Date | string;
-    endDate?: Date | string;
-    subdivision: SubdivisionType;
-    assignedEngineerIds: string[];
-    equipmentIds: string[]; // Replaced equipmentDetails
-    status: MaintenancePeriodStatus;
+  id: string;
+  name: string;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  subdivision: SubdivisionType;
+  assignedEngineerIds: string[];
+  equipmentIds: string[];
+  status: MaintenancePeriodStatus;
 }
 
 export interface ServiceContract {
@@ -79,19 +74,18 @@ export interface ServiceContract {
 }
 
 export interface ServiceHistory {
-    id: string;
-    taskId: string;
-    completionDate: Date;
-    notes: string;
+  id: string;
+  taskId: string;
+  completionDate: Date;
+  notes: string;
 }
 
 export interface EquipmentRequirement {
-    taskType: ServiceType;
-    equipment: string[];
+  taskType: ServiceType;
+  equipment: string[];
 }
 
 export type UserRole = 'admin' | 'engineer';
-
 export type MaintenanceViewMode = 'list' | 'kanban-engineer' | 'kanban-subdivision';
 
 export interface DisplaySettings {
@@ -104,7 +98,6 @@ export interface DisplaySettings {
   baseFontSize: number;
   showCompletedTasks: boolean;
 }
-
 
 export interface UserProfile {
   uid: string;

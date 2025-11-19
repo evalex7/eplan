@@ -1,4 +1,5 @@
-import data from './placeholder-images.json';
+// src/lib/placeholder-images.ts
+import data from '@/data/placeholder-images.json';
 
 export type ImagePlaceholder = {
   id: string;
@@ -7,4 +8,10 @@ export type ImagePlaceholder = {
   imageHint: string;
 };
 
-export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+/**
+ * Масив зображень-заповнювачів.
+ * Перевіряємо, чи дані з JSON дійсно масив.
+ */
+export const PlaceHolderImages: ImagePlaceholder[] = Array.isArray(data.placeholderImages)
+  ? (data.placeholderImages as ImagePlaceholder[])
+  : [];

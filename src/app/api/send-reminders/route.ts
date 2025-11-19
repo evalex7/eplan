@@ -1,46 +1,45 @@
-"use server";
+// src/app/api/send-reminders/route.ts
+import { admin } from '@/lib/firebaseAdmin';
 
-import admin from "@/lib/firebaseAdmin";
-import { NextResponse } from "next/server";
-
-// Обов'язково: ТІЛЬКИ async-функції
-export async function POST() {
+export const GET = async (req: Request) => {
   try {
-    const firestore = admin.firestore();
+    // Просто повертаємо пустий масив або реальні дані з Firestore, якщо хочеш
+    const snapshot = await admin.firestore().collection('tasks').get();
+    const tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    const now = new Date();
-    const nowHour = now.getHours();
-    const nowMinute = now.getMinutes();
+    return new Response(JSON.stringify({ tasks }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch tasks' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};
 
-    // Отримуємо всі профілі
-    const profilesSnapshot = await firestore.collection("profiles").get();
+export const POST = async (req: Request) => {
+  try {
+    // Приймаємо дані, але поки не відправляємо email/пуш
+    const body = await req.json();
 
-    const remindersToSend: any[] = [];
-
-    profilesSnapshot.forEach((doc) => {
-      const profile = doc.data();
-      const reminders = profile?.reminders || [];
-
-      reminders.forEach((reminder: any) => {
-        if (!reminder.time) return;
-
-        const [h, m] = reminder.time.split(":").map(Number);
-
-        if (h === nowHour && m === nowMinute) {
-          remindersToSend.push({
-            userId: doc.id,
-            reminder,
-          });
-        }
-      });
+    // Зберігаємо у Firestore (опціонально)
+    await admin.firestore().collection('reminders').add({
+      ...body,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    // Тут ти можеш передати remindersToSend у push-повідомлення Firebase
-    console.log("Reminders to send:", remindersToSend);
-
-    return NextResponse.json({ ok: true, remindersToSend });
-  } catch (err: any) {
-    console.error("Error in reminders API:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Reminder stored successfully' }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error creating reminder:', error);
+    return new Response(JSON.stringify({ error: 'Failed to create reminder' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-}
+};

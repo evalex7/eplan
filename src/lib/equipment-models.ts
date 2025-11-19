@@ -1,4 +1,4 @@
-import type { EquipmentModel } from './types';
+import type { EquipmentModel } from '@/lib/types';
 
 export const initialEquipmentModels: EquipmentModel[] = [
     // Кондиціонери

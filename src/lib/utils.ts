@@ -1,23 +1,16 @@
 // src/lib/utils.ts
-
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-/**
- * Робить першу літеру великою, решту залишає без змін
- */
 export function capitalizeFirstLetter(str: string): string {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-/**
- * Очищає адресу для навігації, прибираючи службові скорочення
- */
 export function cleanAddressForNavigation(address: string): string {
   if (!address) return "";
   return address
@@ -27,9 +20,6 @@ export function cleanAddressForNavigation(address: string): string {
     .trim();
 }
 
-/**
- * Повертає правильну форму слова "день"
- */
 export function getDaysString(days: number): string {
   const lastDigit = days % 10;
   const lastTwoDigits = days % 100;
@@ -40,10 +30,6 @@ export function getDaysString(days: number): string {
   return "днів";
 }
 
-/**
- * Робить першу літеру кожного слова великою, не змінюючи решту.
- * Використовуються пробіли та дефіси як роздільники.
- */
 export function capitalizeWords(str: string): string {
   if (!str) return "";
 
@@ -51,13 +37,8 @@ export function capitalizeWords(str: string): string {
   return str
     .split(delimiters)
     .map((part) => {
-      // Якщо роздільник — залишаємо як є
       if (delimiters.test(part)) return part;
-
-      // Якщо це абревіатура (всі великі) — залишаємо
       if (part.length > 1 && part === part.toUpperCase()) return part;
-
-      // Якщо перша літера є буквою — робимо її великою
       return part.charAt(0).toUpperCase() + part.slice(1);
     })
     .join("");
