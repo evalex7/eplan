@@ -1,10 +1,8 @@
-// src/lib/firebaseAdmin.ts
+import adminModule from 'firebase-admin';
 
-import admin from 'firebase-admin';
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
+if (!adminModule.apps.length) {
+  adminModule.initializeApp({
+    credential: adminModule.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
@@ -13,6 +11,5 @@ if (!admin.apps.length) {
   });
 }
 
-export { admin };
-
-// ✅ Trigger clean build for Vercel
+// ✅ Експортуємо тільки named export
+export const admin = adminModule;
