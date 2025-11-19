@@ -1,4 +1,4 @@
-// src/lib/firebaseAdmin.ts
+// firebaseAdmin.ts
 import admin from 'firebase-admin';
 
 if (!admin.apps.length) {
@@ -12,4 +12,4 @@ if (!admin.apps.length) {
   });
 }
 
-export default admin;
+export { admin }; // <- named export
