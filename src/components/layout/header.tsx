@@ -1,29 +1,18 @@
 "use client";
 
-import { Wind, Bot, User, LifeBuoy, LogOut, Settings } from "lucide-react";
+import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { cn } from "@/lib/utils";
-import { useFirebase } from "@/firebase";
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import NotificationBell from "../notification-bell";
+import { EplanLogoIcon } from "../icons/eplan-logo-icon";
 
 interface HeaderProps {
   onRescheduleClick: () => void;
   onSettingsClick: () => void;
   isRescheduleActive: boolean;
   className?: string;
-  isCollapsed: boolean; 
+  isCollapsed: boolean;
 }
 
 export default function Header({
@@ -33,32 +22,34 @@ export default function Header({
   className,
   isCollapsed,
 }: HeaderProps) {
-  const { auth } = useFirebase();
-  const router = useRouter();
   const isAdmin = useIsAdmin();
-
-  const handleLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-      router.push("/login");
-    }
-  };
 
   return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-30 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm transition-transform duration-300 ease-in-out md:px-6",
+        className,
         isCollapsed && "-translate-y-full"
       )}
     >
-      <div className="flex items-center gap-2">
-        <Wind className="h-6 w-6 text-primary" />
-        <h1 className="text-xl font-bold tracking-tight text-foreground">
-          AirControl
-        </h1>
+      <div className="flex-1 flex justify-start">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onSettingsClick}
+            className="p-1 rounded-md transition-colors hover:bg-muted"
+          >
+            <EplanLogoIcon className="h-8 w-8" />
+            <span className="sr-only">Параметри</span>
+          </button>
+          <h1 className="font-logo text-xl font-bold tracking-wider text-foreground whitespace-nowrap">
+            <span className="bg-gradient-to-r from-blue-500 to-cyan-400 text-transparent bg-clip-text">
+              e-plan
+            </span>
+          </h1>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex-1 flex justify-center">
         {isAdmin && (
           <Button
             onClick={onRescheduleClick}
@@ -71,18 +62,10 @@ export default function Header({
             <span className="sr-only">Асистент коригування дати</span>
           </Button>
         )}
-        
-        <NotificationBell />
+      </div>
 
-        <Button
-            onClick={onSettingsClick}
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9"
-        >
-            <Settings className="h-5 w-5" />
-            <span className="sr-only">Параметри</span>
-        </Button>
+      <div className="flex-1 flex justify-end">
+        <NotificationBell />
       </div>
     </header>
   );

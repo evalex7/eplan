@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="uk" suppressHydrationWarning>
       <head>
-        <title>AirControl</title>
+        <title>e-plan</title>
         <meta name="description" content="Планування технічного обслуговування промислових кондиціонерів за допомогою ШІ." />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2172e2" />
@@ -20,7 +20,8 @@ export default function RootLayout({
         <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
         <AppBody>

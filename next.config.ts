@@ -1,4 +1,4 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 require('dotenv').config({ path: './.env' });
 
 const withPWA = require('@ducanh2912/next-pwa').default({
@@ -9,16 +9,27 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // ВАЖЛИВО: увімкнути webpack у Next.js 16
+  webpack: (config) => {
+    return config;
+  },
+
+  // Заглушка для Turbopack: прибирає помилку
+  turbopack: {},
+
+  // Інші налаштування
   typescript: {
     ignoreBuildErrors: true,
   },
+
   eslint: {
     ignoreDuringBuilds: true,
   },
+
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version,
   },
+
   images: {
     remotePatterns: [
       {
