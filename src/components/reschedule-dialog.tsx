@@ -127,8 +127,14 @@ export default function RescheduleDialog({
     setSuggestions([]);
     try {
       const otherPeriods = allContracts
-        .flatMap(c => c.maintenancePeriods)
-        .filter(p => p.id !== selectedPeriod.id && p.subdivision); // Ensure subdivision exists
+        .filter(c => !c.archived)
+        .flatMap(c => 
+            c.maintenancePeriods.map(p => ({
+                ...p,
+                contract: c, // Attach contract for equipment lookup
+            }))
+        )
+        .filter(p => p.id !== selectedPeriod.id && p.subdivision);
 
       const periodToReschedule = {
         id: selectedPeriod.id,
@@ -148,7 +154,6 @@ export default function RescheduleDialog({
       const response = await rescheduleMaintenanceSuggestions({
         periodToReschedule: periodToReschedule,
         otherScheduledPeriods: otherPeriods.map(p => ({
-            ...p,
             id: p.id,
             name: p.name,
             startDate: toISODate(p.startDate),
@@ -157,7 +162,7 @@ export default function RescheduleDialog({
             assignedEngineerIds: p.assignedEngineerIds,
             status: p.status,
              equipmentDetails: (p.equipmentIds || [])
-                .map(id => allContracts.find(c => c.id === (p as any).contract?.id)?.equipment.find(e => e.id === id)?.name)
+                .map(id => p.contract.equipment.find(e => e.id === id)?.name)
                 .filter(Boolean)
                 .join(', '),
         })),
@@ -244,7 +249,7 @@ export default function RescheduleDialog({
             <h4 className="font-semibold text-lg">Запропоновані нові дати:</h4>
             {suggestions.map((suggestion, index) => (
                <Alert key={index} className="bg-primary/5">
-                <CheckCircle suppressHydrationWarning className="h-4 w-4 !text-primary" />
+                <CheckCircle className="h-4 w-4 !text-primary" />
                  <AlertTitle className="font-bold flex justify-between items-center">
                    {format(new Date(suggestion.newDate), 'PPP', { locale: uk })}
                    <Button size="sm" variant="outline">Обрати</Button>
@@ -259,7 +264,7 @@ export default function RescheduleDialog({
           <div className="flex justify-center items-center h-24">
             {isLoading ? (
               <div className="flex flex-col items-center gap-2">
-                <Loader2 suppressHydrationWarning className="h-8 w-8 animate-spin text-primary" />
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-muted-foreground">Аналіз розкладів...</p>
               </div>
             ) : (
@@ -276,7 +281,7 @@ export default function RescheduleDialog({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Calendar suppressHydrationWarning className="text-primary" />
+            <Calendar className="text-primary" />
             Перепланувати обслуговування
           </DialogTitle>
           <DialogDescription>
@@ -294,7 +299,7 @@ export default function RescheduleDialog({
           </Button>
           {selectedPeriod && !isLoading && (
             <Button onClick={handleGetSuggestions} disabled={isLoading}>
-              <Sparkles suppressHydrationWarning className="mr-2 h-4 w-4" />
+              <Sparkles className="mr-2 h-4 w-4" />
               { isLoading ? 'Завантаження...' : 'Отримати пропозиції' }
             </Button>
           )}
