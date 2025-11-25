@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -21,15 +22,13 @@ import {
 } from '@/components/ui/select';
 import type { Equipment, EquipmentModel } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { initialEquipmentModels } from '@/lib/equipment-models';
-
-const LOCAL_STORAGE_KEY = 'equipmentModels';
 
 interface AddEquipmentDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onSave: (equipment: Omit<Equipment, 'id' | 'reports'>, id?: string) => void;
   equipmentToEdit?: Equipment | null;
+  allModels: EquipmentModel[];
 }
 
 export default function AddEquipmentDialog({
@@ -37,8 +36,8 @@ export default function AddEquipmentDialog({
   setIsOpen,
   onSave,
   equipmentToEdit,
+  allModels,
 }: AddEquipmentDialogProps) {
-  const [allModels, setAllModels] = useState<EquipmentModel[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedModelName, setSelectedModelName] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
@@ -48,18 +47,6 @@ export default function AddEquipmentDialog({
 
   useEffect(() => {
     if (isOpen) {
-      try {
-        const storedModels = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (storedModels) {
-          setAllModels(JSON.parse(storedModels));
-        } else {
-          setAllModels(initialEquipmentModels);
-        }
-      } catch (error) {
-        console.error("Failed to load equipment models from localStorage", error);
-        setAllModels(initialEquipmentModels);
-      }
-
       if (isEditing && equipmentToEdit) {
         setSelectedCategory(equipmentToEdit.name);
         setSelectedModelName(equipmentToEdit.model);
@@ -152,7 +139,7 @@ export default function AddEquipmentDialog({
                 </SelectTrigger>
                 <SelectContent>
                      {modelsForCategory.map(mod => (
-                        <SelectItem key={mod.name} value={mod.name}>{mod.name}</SelectItem>
+                        <SelectItem key={mod.id} value={mod.name}>{mod.name}</SelectItem>
                     ))}
                 </SelectContent>
             </Select>

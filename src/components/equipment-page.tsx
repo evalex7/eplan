@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useMemo, useState, useEffect } from 'react';
@@ -14,14 +15,10 @@ import { cn } from '@/lib/utils';
 import { uk } from 'date-fns/locale';
 import { Button } from './ui/button';
 import AddMaintenanceReportDialog from './add-maintenance-report-dialog';
-import { initialEquipmentModels } from '@/lib/equipment-models';
 import { Input } from './ui/input';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
-
-const LOCAL_STORAGE_KEY_EQUIPMENT = 'equipmentModels';
-
 
 const safeGetDate = (date: any): Date | null => {
     if (!date) return null;
@@ -58,23 +55,14 @@ export default function EquipmentPage() {
     const [contractForReport, setContractForReport] = useState<ServiceContract | null>(null);
     const [reportToEdit, setReportToEdit] = useState<ServiceReport | null>(null);
     
-    const [equipmentModels, setEquipmentModels] = useState<EquipmentModel[]>([]);
-     useEffect(() => {
-        try {
-            const storedModels = localStorage.getItem(LOCAL_STORAGE_KEY_EQUIPMENT);
-            setEquipmentModels(storedModels ? JSON.parse(storedModels) : initialEquipmentModels);
-        } catch (error) {
-            console.error("Failed to load equipment models from localStorage", error);
-            setEquipmentModels(initialEquipmentModels);
-        }
-    }, []);
-
-
     const contractsRef = useMemoFirebase(() => firestore ? collection(firestore, 'serviceContracts') : null, [firestore]);
     const { data: contracts, isLoading: isLoadingContracts } = useCollection<ServiceContract>(contractsRef);
     
     const engineersRef = useMemoFirebase(() => firestore ? collection(firestore, 'serviceEngineers') : null, [firestore]);
     const { data: engineers, isLoading: isLoadingEngineers } = useCollection<ServiceEngineer>(engineersRef);
+    
+    const equipmentModelsRef = useMemoFirebase(() => firestore ? collection(firestore, 'equipmentModels') : null, [firestore]);
+    const { data: equipmentModels, isLoading: isLoadingEquipmentModels } = useCollection<EquipmentModel>(equipmentModelsRef);
 
     const groupedObjects = useMemo(() => {
         if (!contracts) return [];
@@ -154,7 +142,7 @@ export default function EquipmentPage() {
     };
 
 
-    const isLoading = isLoadingContracts || isLoadingEngineers;
+    const isLoading = isLoadingContracts || isLoadingEngineers || isLoadingEquipmentModels;
 
     const findEngineerName = (id: string) => engineers?.find(e => e.id === id)?.name || 'Невідомий';
 
@@ -269,7 +257,7 @@ export default function EquipmentPage() {
                     equipment={selectedEquipment}
                     engineers={engineers || []}
                     reportToEdit={reportToEdit}
-                    equipmentModels={equipmentModels}
+                    equipmentModels={equipmentModels || []}
                 />
             )}
         </div>

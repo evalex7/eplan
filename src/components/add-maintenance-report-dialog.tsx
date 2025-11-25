@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -155,7 +156,7 @@ export default function AddMaintenanceReportDialog({
   }
   
   const sortedEquipmentModels = useMemo(() => 
-    [...equipmentModels].sort((a,b) => a.name.localeCompare(b.name)), 
+    [...(equipmentModels || [])].sort((a,b) => a.name.localeCompare(b.name)), 
   [equipmentModels]);
 
   return (

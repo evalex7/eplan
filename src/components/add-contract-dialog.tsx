@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -21,6 +22,7 @@ import type {
   Equipment,
   TaskStatus,
   SubdivisionType,
+  EquipmentModel,
 } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { format, isPast, parseISO, isValid, isSameMonth } from "date-fns";
@@ -358,12 +360,14 @@ export default function AddEditContractDialog({
   onSave,
   taskToEdit,
   engineers: allEngineers,
+  equipmentModels,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onSave: (task: Omit<ServiceContract, "id" | "archived">, id?: string) => void;
   taskToEdit?: ServiceContract | null;
   engineers: ServiceEngineer[];
+  equipmentModels: EquipmentModel[];
   allContracts: ServiceContract[];
 }) {
   const [formState, setFormState] = useState(getInitialState());
@@ -848,8 +852,8 @@ export default function AddEditContractDialog({
         setIsOpen={setEquipmentDialogOpen}
         onSave={handleSaveEquipment}
         equipmentToEdit={equipmentToEdit}
+        allModels={equipmentModels}
       />
     </>
   );
 }
-    
