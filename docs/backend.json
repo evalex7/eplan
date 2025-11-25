@@ -1,0 +1,159 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Stores user profile information and their role.",
+      "properties": {
+        "uid": { "type": "string", "description": "The user's unique ID from Firebase Auth." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "displayName": { "type": "string", "description": "The user's display name." },
+        "role": { "type": "string", "enum": ["admin", "engineer"], "description": "The user's role in the system." },
+        "disabled": { "type": "boolean", "description": "Whether the user account is disabled." },
+        "displaySettings": {
+          "type": "object",
+          "description": "User-specific display settings.",
+          "properties": {
+            "autoHidePanels": { "type": "boolean" },
+            "isWideMode": { "type": "boolean" },
+            "showOverdue": { "type": "boolean" },
+            "showUpcoming": { "type": "boolean" },
+            "upcomingDays": { "type": ["number", "string"], "enum": [7, 14, 30, 45, 60, 90, "endOfMonth"] },
+            "maintenanceViewMode": { "type": "string", "enum": ["list", "kanban-engineer", "kanban-subdivision"] },
+            "baseFontSize": { "type": "number" },
+            "showCompletedTasks": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "ServiceContract": {
+      "title": "ServiceContract",
+      "type": "object",
+      "description": "Represents a service contract with a customer for maintenance.",
+      "properties": {
+        "contractNumber": { "type": "string" },
+        "clientObjectId": { "type": "string" },
+        "objectName": { "type": "string" },
+        "counterparty": { "type": "string" },
+        "address": { "type": "string" },
+        "coordinates": { "type": "string", "description": "Comma-separated latitude and longitude from Google Maps." },
+        "contactPerson": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "contractStartDate": { "type": "string", "format": "date-time" },
+        "contractEndDate": { "type": "string", "format": "date-time" },
+        "serviceType": { "type": "string" },
+        "scheduledDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string" },
+        "workDescription": { "type": "string" },
+        "equipmentTypes": { "type": "string" },
+        "maintenancePeriods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "startDate": { "type": "string", "format": "date-time" },
+              "endDate": { "type": "string", "format": "date-time" },
+              "subdivisions": {
+                "type": "object",
+                "properties": {
+                  "kond": { "type": "boolean" },
+                  "dbzh": { "type": "boolean" },
+                  "dgu": { "type": "boolean" }
+                }
+              },
+              "assignedEngineerIds": { "type": "array", "items": { "type": "string" } },
+              "reports": {
+                "type": "array",
+                "items": { "$ref": "#/entities/ServiceReport" }
+              }
+            }
+          }
+        },
+        "equipment": {
+          "type": "array",
+          "description": "List of equipment covered by this contract.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "model": { "type": "string" },
+              "serialNumber": { "type": "string" },
+              "reports": {
+                "type": "array",
+                "items": { "$ref": "#/entities/ServiceReport" }
+              }
+            },
+            "required": ["id", "name"]
+          }
+        },
+        "archived": { "type": "boolean" }
+      },
+      "required": ["contractNumber", "objectName", "counterparty", "scheduledDate", "status", "archived"]
+    },
+    "ServiceEngineer": {
+      "title": "ServiceEngineer",
+      "type": "object",
+      "description": "Represents a service engineer.",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" }
+      },
+      "required": ["name", "email"]
+    },
+    "ServiceReport": {
+        "title": "ServiceReport",
+        "type": "object",
+        "description": "Represents a service report for a piece of equipment.",
+        "properties": {
+            "id": { "type": "string" },
+            "engineerId": { "type": "string" },
+            "reportDate": { "type": "string", "format": "date-time" },
+            "workDescription": { "type": "string" },
+            "partsUsed": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "quantity": { "type": "number" }
+                    },
+                    "required": ["name", "quantity"]
+                }
+            }
+        },
+        "required": ["id", "engineerId", "reportDate", "workDescription"]
+    },
+    "EquipmentModel": {
+      "title": "EquipmentModel",
+      "type": "object",
+      "description": "Represents a model of equipment that can be serviced.",
+      "properties": {
+        "name": { "type": "string", "description": "The name of the equipment model, e.g., 'Cooper&Hunter CH-S09FTXQ'." },
+        "category": { "type": "string", "description": "The category of the equipment, e.g., 'Air Conditioner'." }
+      },
+      "required": ["name", "category"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores user profiles and roles."
+    },
+    "/serviceContracts/{serviceContractId}": {
+      "schema": { "$ref": "#/entities/ServiceContract" },
+      "description": "Stores all service contracts."
+    },
+    "/serviceEngineers/{serviceEngineerId}": {
+      "schema": { "$ref": "#/entities/ServiceEngineer" },
+      "description": "Stores all service engineers."
+    }
+  }
+}
