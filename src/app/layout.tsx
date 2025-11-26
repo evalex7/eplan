@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { DisplaySettingsProvider } from "@/hooks/display-settings-context";
 
 
-export default function RootLayout({
+export const dynamic = "force-dynamic"({
   children,
 }: Readonly<{
   children: React.ReactNode;
