@@ -111,3 +111,18 @@
   background-color: hsl(var(--destructive));
   animation: bell-glow 1.5s ease-out infinite;
 }
+
+@keyframes click-highlight {
+  0% {
+    background-color: hsl(var(--accent));
+    opacity: 0.8;
+  }
+  100% {
+    background-color: transparent;
+    opacity: 0;
+  }
+}
+
+.animate-click-highlight {
+  animation: click-highlight 0.6s ease-out;
+}

@@ -65,7 +65,7 @@ export default function SettingsPage() {
     const isAdmin = useIsAdmin();
     const [equipmentModels, setEquipmentModels] = useState<EquipmentModel[]>([]);
     const { theme, setTheme, resolvedTheme } = useTheme();
-    const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || '2.8.9';
+    const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || '2.8.10';
 
     // State for editing dialog
     const [isEditDialogOpen, setEditDialogOpen] = useState(false);
@@ -161,7 +161,7 @@ export default function SettingsPage() {
     };
     
     const handleSupportClick = () => {
-        window.location.href = "mailto:support@example.com?subject=Підтримка AirControl";
+        window.location.href = "mailto:support@example.com?subject=Підтримка e-plan";
     };
     
     const handleLogout = async () => {
@@ -342,7 +342,7 @@ export default function SettingsPage() {
                    <SettingItem icon={<BookOpen className="h-5 w-5" />} title="Довідка" onClick={() => setHelpOpen(true)} />
                    <SettingItem icon={<LifeBuoy className="h-5 w-5" />} title="Підтримка" onClick={handleSupportClick} />
                    <SettingItem icon={<RefreshCw className="h-5 w-5" />} title="Перевірка оновлення" onClick={() => toast({ title: 'Остання версія', description: 'У вас встановлено останню версію застосунку.'})} />
-                   <SettingItem icon={<Info className="h-5 w-5" />} title={`Версія: ${appVersion} (від 21.11.2025)`} />
+                   <SettingItem icon={<Info className="h-5 w-5" />} title={`Версія: ${appVersion} (від 25.11.2025)`} />
                    <SettingItem icon={<Code className="h-5 w-5" />} title="Виробник: evalex" />
                 </div>
             </div>
@@ -376,3 +376,5 @@ export default function SettingsPage() {
         </>
     );
 }
+
+    

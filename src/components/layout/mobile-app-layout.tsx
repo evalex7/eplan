@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -21,6 +22,14 @@ const navLinks = [
 ];
 
 function BottomNav({ activeId, onNavigate, isCollapsed }: { activeId: string; onNavigate: (id: string) => void; isCollapsed: boolean }) {
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
+  const handleNavigate = (id: string) => {
+    onNavigate(id);
+    setHighlightedId(id);
+    setTimeout(() => setHighlightedId(null), 600); // Duration of the animation
+  };
+
   return (
     <nav
       className={cn(
@@ -31,17 +40,22 @@ function BottomNav({ activeId, onNavigate, isCollapsed }: { activeId: string; on
       <div className="grid h-16" style={{ gridTemplateColumns: `repeat(${navLinks.length}, 1fr)` }}>
         {navLinks.map((link) => {
           const isActive = activeId === link.id;
+          const isHighlighted = highlightedId === link.id;
+
           return (
             <button
               key={link.id}
-              onClick={() => onNavigate(link.id)}
+              onClick={() => handleNavigate(link.id)}
               className={cn(
                 "relative flex flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-primary",
                 isActive && "text-primary"
               )}
             >
-              <div className="h-6 w-6">{link.icon}</div>
-              <span className={cn("text-xs font-medium", isActive && "font-bold")}>{link.label}</span>
+              {isHighlighted && (
+                  <div className="absolute inset-x-2 inset-y-1 animate-click-highlight rounded-lg" />
+              )}
+              <div className="relative z-10 h-6 w-6">{link.icon}</div>
+              <span className={cn("relative z-10 text-xs font-medium", isActive && "font-bold")}>{link.label}</span>
             </button>
           );
         })}
@@ -53,7 +67,7 @@ function BottomNav({ activeId, onNavigate, isCollapsed }: { activeId: string; on
 export default function MobileAppLayout({ activeTab, onTabChange }: { activeTab: string; onTabChange: (tab: string) => void }) {
   const [isRescheduleDialogOpen, setRescheduleDialogOpen] = useState(false);
   const [selectedTaskForReschedule, setSelectedTaskForReschedule] = useState<ServiceContract | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState("maintenance");
+  const [activeSubTab, setActiveSubTab] = useState("notifications");
   const { settings } = useDisplaySettings();
 
   const mainRef = useRef<HTMLElement>(null);
