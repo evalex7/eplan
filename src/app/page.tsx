@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -6,6 +7,7 @@ import { useUser } from '@/firebase';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   const router = useRouter();
