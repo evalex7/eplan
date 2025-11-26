@@ -1,23 +1,23 @@
-async function fetchAiSuggestion(task: string) {
-  const res = await fetch("/api/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ task }),
-  });
+// src/app/maintenance/page.tsx
+'use client'; // ⚠ Обов'язково, щоб були обробники подій
 
-  const data = await res.json();
-  return data.answer;
-}
+import React from "react";
 
-export default function Component() {
-  async function handleClick() {
-    const ans = await fetchAiSuggestion("Яке ТО треба зробити кондиціонеру HPS?");
-    console.log(ans);
-  }
+export default function MaintenancePage() {
+  const handleClick = () => {
+    alert("Клікнув!");
+  };
 
   return (
-    <button onClick={handleClick}>
-      Запитати ШІ
-    </button>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <h1 className="text-3xl font-bold mb-4">Сторінка обслуговування</h1>
+      <p className="mb-6 text-gray-700">Сайт тимчасово недоступний через технічне обслуговування.</p>
+      <button
+        className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        onClick={handleClick}
+      >
+        Натисни мене
+      </button>
+    </div>
   );
 }
