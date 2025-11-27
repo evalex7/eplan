@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -43,7 +42,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ServiceContract, ServiceEngineer, SubdivisionType, UserProfile, TaskStatus, EquipmentModel } from '@/lib/types';
+import type { ServiceContract, ServiceEngineer, SubdivisionType, UserProfile, TaskStatus } from '@/lib/types';
 import AddEditContractDialog from '@/components/add-contract-dialog';
 import { cn, cleanAddressForNavigation, capitalizeWords } from '@/lib/utils';
 import { useFirebase, useCollection, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase';
@@ -90,6 +89,9 @@ const ContractCard = ({
   };
   
   const sortedMaintenancePeriods = useMemo(() => {
+    if (!task.maintenancePeriods) {
+      return [];
+    }
     return [...task.maintenancePeriods].sort((a, b) => {
         const dateA = safeGetDate(a.startDate);
         const dateB = safeGetDate(b.startDate);
@@ -293,9 +295,6 @@ export default function ContractsTable({ onReschedule }: { onReschedule: (task: 
 
   const engineersRef = useMemoFirebase(() => firestore ? collection(firestore, 'serviceEngineers') : null, [firestore]);
   const { data: engineers, isLoading: isLoadingEngineers } = useCollection<ServiceEngineer>(engineersRef);
-
-  const equipmentModelsRef = useMemoFirebase(() => firestore ? collection(firestore, 'equipmentModels') : null, [firestore]);
-  const { data: equipmentModels, isLoading: isLoadingEquipmentModels } = useCollection<EquipmentModel>(equipmentModelsRef);
   
   const handleToggleExpand = (taskId: string) => {
     setExpandedCards(prev => {
@@ -434,7 +433,7 @@ export default function ContractsTable({ onReschedule }: { onReschedule: (task: 
     setAreAllExpanded(!areAllExpanded);
   };
 
-  const isLoading = isLoadingContracts || isLoadingEngineers || isLoadingEquipmentModels;
+  const isLoading = isLoadingContracts || isLoadingEngineers;
   const totalArchivedCount = useMemo(() => allTasks?.filter(t => t.archived).length || 0, [allTasks]);
 
 
@@ -521,7 +520,6 @@ export default function ContractsTable({ onReschedule }: { onReschedule: (task: 
           onSave={handleSaveTask}
           taskToEdit={taskToEdit}
           engineers={engineers || []}
-          equipmentModels={equipmentModels || []}
           allContracts={allTasks || []}
         />
       )}
@@ -543,3 +541,4 @@ export default function ContractsTable({ onReschedule }: { onReschedule: (task: 
     </>
   );
 }
+    
