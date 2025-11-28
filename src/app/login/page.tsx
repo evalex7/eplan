@@ -113,7 +113,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-2">
                 <Wind className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">AirControl</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">e-plan</h1>
             </div>
           <CardTitle>Вхід в систему</CardTitle>
           <CardDescription>Введіть ваші дані для доступу до панелі.</CardDescription>
