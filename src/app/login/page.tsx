@@ -17,8 +17,9 @@ import { useRouter } from 'next/navigation';
 import { useFirebase } from '@/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthErrorCodes, type User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { Wind, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { defaultSettings } from '@/hooks/display-settings-context';
+import { EplanLogoIcon } from '@/components/icons/eplan-logo-icon';
 
 
 export default function LoginPage() {
@@ -112,8 +113,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-2">
-                <Wind className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">e-plan</h1>
+                <EplanLogoIcon className="h-8 w-8" />
+                <h1 className="text-3xl font-bold tracking-tighter text-foreground bg-gradient-to-r from-blue-500 to-cyan-400 text-transparent bg-clip-text">
+                  e-plan
+                </h1>
             </div>
           <CardTitle>Вхід в систему</CardTitle>
           <CardDescription>Введіть ваші дані для доступу до панелі.</CardDescription>
